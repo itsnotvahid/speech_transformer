@@ -1,12 +1,12 @@
 from torch import nn
-
 from config import args
 from conv import CNNFeatureExtractor
 from transformer import TransformerEncoder, TransformerDecoder
 from sub_models import Transform
+import __main__
 
 
-class ASRNeural(nn.Module):
+class ASRNeuralNetwork(nn.Module):
 
     def __init__(self, num_classes):
         super().__init__()
@@ -28,3 +28,6 @@ class ASRNeural(nn.Module):
         encoder_out = self.encoder(encoder_out)
         y = self.decoder(target, encoder_out)
         return y
+
+
+setattr(__main__, 'ASRNeuralNetwork', ASRNeuralNetwork)
