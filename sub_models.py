@@ -8,15 +8,10 @@ import math
 class Transform(nn.Module):
     def __init__(self):
         super().__init__()
-        self.train_transform = nn.Sequential(T.MelSpectrogram(n_fft=args.n_ft,
-                                                              hop_length=args.h_len,
-                                                              n_mels=80, sample_rate=args.sr),
+        self.train_transform = nn.Sequential(T.MelSpectrogram(n_mels=80),
                                              T.FrequencyMasking(10),
                                              T.TimeMasking(10)).to(args.device)
-        self.valid_transform = T.MelSpectrogram(n_fft=args.n_ft,
-                                                hop_length=args.h_len,
-                                                n_mels=80,
-                                                sample_rate=args.sr).to(args.device)
+        self.valid_transform = T.MelSpectrogram(n_mels=80).to(args.device)
 
     def forward(self, x):
         if self.training:

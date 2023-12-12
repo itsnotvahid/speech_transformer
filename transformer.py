@@ -18,10 +18,9 @@ class TransformerEncoder(nn.Module):
         self.positional_encoding = PositionalEncoding(emb_size=d_model, dropout=0.1)
 
     def forward(self, src):
-        src_mask = None
         src = self.ff(src)
         src = self.positional_encoding(src)
-        output = self.encoder(src, src_mask)
+        output = self.encoder(src)
         return output
 
 
