@@ -4,10 +4,11 @@ from torch.optim import SGD
 from config import args
 from data import vocab, train_loader, valid_loader
 from model import ASRNeuralNetwork
-from utils import train_one_epoch, evaluate, generate
+from loops import train_one_epoch, evaluate
+from utils import inference
 
 if __name__ == '__main__':
-    choice = input('inf or train bro')
+    choice = input('inf or train')
     if choice == 'train':
         best_loss_valid = 1e+4
         model = ASRNeuralNetwork(len(vocab)).to(args.device)
@@ -26,5 +27,8 @@ if __name__ == '__main__':
                 print('model saved')
     else:
         model = torch.load('model.pt')
-        wave, label = next(iter(train_loader))
-        print(generate(model, wave, 150))
+
+        for i in range(10):
+            wave, label = next(iter(valid_loader))
+            inference(model, wave, label=label)
+            print('>>'*50)

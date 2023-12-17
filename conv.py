@@ -37,5 +37,5 @@ class CNNFeatureExtractor(nn.Module):
         for module in self.blocks:
             x = module(x)
         batch_size, channels, freq, sequence = x.size()
-        x = x.view(batch_size, sequence, channels * freq)
+        x = x.reshape(batch_size, channels*freq, sequence).permute(0, 2, 1)
         return x

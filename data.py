@@ -8,8 +8,10 @@ from config import args
 from torch.nn.utils.rnn import pad_sequence
 import __main__
 
+
+pattern = r"[^a-z\s']"
 data = pd.read_csv('new_data.csv')
-get_lower = lambda x: re.sub(r"[^a-z\s']", '', x.lower())
+get_lower = lambda x: re.sub(pattern, '', x.lower())
 vocab = build_vocab_from_iterator(
     data['info'].apply(get_lower), special_first=True, specials=args.specials)
 vocab.set_default_index(vocab[''])
@@ -24,13 +26,15 @@ def collate(batch):
 class LJSpeechSet(Dataset):
     def __init__(self, _data):
         pathx = 'LJSpeech-1.1/wavs/'
+        rs = torchaudio.transforms.Resample(22050, 16000)  # resample to 16k from original audio
         self.data = dict()
         self.wave_forms, self.labels, self.sample_rates = list(), list(), list()
 
         for i, row in _data.reset_index().iterrows():
             wave_form, s_r = torchaudio.load(pathx + str(row['f_name']))
+            wave_form = rs(wave_form)
             label = torch.LongTensor([vocab[c] for c in "B" +
-                                      re.sub(r"[^a-z\s']", '', str(row['info'].lower())) + "E"])
+                                      re.sub(pattern, '', str(row['info'].lower())) + "E"])
 
             self.data[i] = {'wave': wave_form, 'label': label}
 
@@ -43,7 +47,7 @@ class LJSpeechSet(Dataset):
 
 
 setattr(__main__, "LJSpeechSet", LJSpeechSet)
-
+# data should be split before passing to dataset
 train_set = torch.load('train_set')
 valid_set = torch.load('valid_set')
 

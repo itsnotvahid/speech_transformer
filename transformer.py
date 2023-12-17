@@ -13,13 +13,10 @@ class TransformerEncoder(nn.Module):
                                                    dropout=0.3,
                                                    activation='gelu',
                                                    nhead=num_heads)
-        self.ff = nn.LazyLinear(d_model)
         self.encoder = nn.TransformerEncoder(encoder_layer, num_layers)
         self.positional_encoding = PositionalEncoding(emb_size=d_model, dropout=0.1)
 
     def forward(self, src):
-        src = self.ff(src)
-        src = self.positional_encoding(src)
         output = self.encoder(src)
         return output
 

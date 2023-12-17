@@ -8,10 +8,10 @@ import math
 class Transform(nn.Module):
     def __init__(self):
         super().__init__()
-        self.train_transform = nn.Sequential(T.MelSpectrogram(n_mels=80),
+        self.train_transform = nn.Sequential(T.MelSpectrogram(n_mels=args.n_mels),
                                              T.FrequencyMasking(10),
                                              T.TimeMasking(10)).to(args.device)
-        self.valid_transform = T.MelSpectrogram(n_mels=80).to(args.device)
+        self.valid_transform = T.MelSpectrogram(n_mels=args.n_mels).to(args.device)
 
     def forward(self, x):
         if self.training:
@@ -47,4 +47,4 @@ class Embeddings(nn.Module):
         self.dropout = nn.Dropout(0.5)
 
     def forward(self, token_embedding):
-        return self.dropout(self.embedding(token_embedding.long())) * math.sqrt(self.d_model)
+        return self.dropout(self.embedding(token_embedding.long()))
