@@ -2,7 +2,7 @@
 
 implention of speech recognition with pytorch
 
-custom dataset is designed for modified [LJSPEECH](https://keithito.com/LJ-Speech-Dataset/)
+custom dataset is designed for my version of csv processed [LJSPEECH](https://keithito.com/LJ-Speech-Dataset/)
 
 used encoder-decoder structure with cross entropy:
 
